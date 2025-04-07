@@ -28,7 +28,7 @@ media/
 staticfiles/
 
 # Environments
-.env
+#.env Descomentar para evitar que se suba el archivo .env a github
 .venv
 env/
 venv/
