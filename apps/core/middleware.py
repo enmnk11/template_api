@@ -1,6 +1,7 @@
 import json
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 
 class ErrorHandlerMiddleware:
@@ -23,23 +24,30 @@ class ErrorHandlerMiddleware:
             # Convertir respuestas de error a nuestro formato estándar
             if 400 <= response.status_code < 600:
                 try:
+                    # Asegurarnos de que la respuesta esté renderizada
+                    if hasattr(response, 'render'):
+                        response.render()
+                    
                     # Si ya es JSON, convertirlo a dict
                     if hasattr(response, 'data'):
                         data = response.data
                     else:
-                        data = json.loads(response.content)
+                        data = json.loads(response.content.decode('utf-8'))
 
                     # Formatear el mensaje de error
                     error_message = self.format_error_message(data)
                     
-                    return Response(
-                        {'detail': error_message},
+                    # Crear una nueva respuesta HTTP
+                    return HttpResponse(
+                        json.dumps({'detail': error_message}),
+                        content_type='application/json',
                         status=response.status_code
                     )
-                except (json.JSONDecodeError, AttributeError):
+                except (json.JSONDecodeError, AttributeError) as e:
                     # Si no es JSON, usar el contenido como está
-                    return Response(
-                        {'detail': str(response.content, 'utf-8')},
+                    return HttpResponse(
+                        json.dumps({'detail': str(response.content, 'utf-8')}),
+                        content_type='application/json',
                         status=response.status_code
                     )
 
