@@ -78,9 +78,15 @@ class ErrorHandlerMiddleware:
             'invalid_choice': 'El valor seleccionado para {} no es válido',
         }
 
-        # Si ya está en el formato que queremos, devolverlo
+        # Traducciones específicas de mensajes de error
+        specific_error_translations = {
+            'No active account found with the given credentials': 'Correo electrónico o contraseña incorrectos'
+        }
+
+        # Si ya está en el formato que queremos, verificar si hay una traducción específica
         if isinstance(data, dict) and 'detail' in data:
-            return data['detail']
+            error_message = data['detail']
+            return specific_error_translations.get(error_message, error_message)
 
         # Si es un diccionario de errores de validación
         if isinstance(data, dict):

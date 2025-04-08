@@ -137,11 +137,30 @@ SIMPLE_JWT = {
 }
 
 # Djoser
+# Djoser
 DJOSER = {
     'SERIALIZERS': {
+        'user_create': 'apps.users.serializers.UserCreateSerializer',
         'user': 'apps.users.serializers.UserSerializer',
+        'current_user': 'apps.users.serializers.UserSerializer',
     },
+    'TOKEN_MODEL': None,  # Deshabilitamos tokens simples ya que usamos JWT
+    'CREATE_SESSION_ON_LOGIN': True,
+    'LOGIN_FIELD': 'username',
+    'SEND_ACTIVATION_EMAIL': False,  # No requerimos activación por email
+    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [],
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.AllowAny'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
+    },
+    'HIDE_USERS': False,
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_CONFIRMATION_EMAIL': False,
 }
+
 
 # CORS
 CORS_ALLOWED_ORIGINS = config(
