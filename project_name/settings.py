@@ -135,6 +135,12 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=465),
 }
 
+# Djoser
+DJOSER = {
+    'SERIALIZERS': {
+        'user': 'apps.users.serializers.UserSerializer',
+    },
+}
 
 # CORS
 CORS_ALLOWED_ORIGINS = config(
