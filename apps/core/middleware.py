@@ -26,7 +26,8 @@ class ErrorHandlerMiddleware:
                 try:
                     # Asegurarnos de que la respuesta esté renderizada
                     if hasattr(response, 'render'):
-                        response.render()
+                        if hasattr(response, 'accepted_renderer') and response.accepted_renderer:
+                            response.render()
                     
                     # Si ya es JSON, convertirlo a dict
                     if hasattr(response, 'data'):
@@ -80,7 +81,8 @@ class ErrorHandlerMiddleware:
 
         # Traducciones específicas de mensajes de error
         specific_error_translations = {
-            'No active account found with the given credentials': 'Correo electrónico o contraseña incorrectos'
+            'No active account found with the given credentials': 'Correo electrónico o contraseña incorrectos',
+            "Given token not valid for any token type": "El token de autenticación no es válido",
         }
 
         # Si ya está en el formato que queremos, verificar si hay una traducción específica

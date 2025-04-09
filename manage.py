@@ -9,13 +9,16 @@ def create_app(app_name):
     try:
         # Crear estructura de directorios
         app_dir = Path('apps') / app_name
+        migrations_dir = app_dir / 'migrations'
 
-        # Crear directorio principal
+        # Crear directorios
         app_dir.mkdir(parents=True, exist_ok=True)
+        migrations_dir.mkdir(exist_ok=True)
 
         # Crear archivos
         files = {
             app_dir / '__init__.py': '',
+            migrations_dir / '__init__.py': '',
             app_dir / 'apps.py': f'''from django.apps import AppConfig
 
 
